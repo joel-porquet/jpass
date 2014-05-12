@@ -328,8 +328,7 @@ class PwdCollection:
             if 'parent' in config[s]:
                 p = config[s]['parent']
                 if not p in self.__services:
-                    print("Parent '%s' does not seem to exist..."%p)
-                    continue
+                    raise ValueError("Parent '%s' does not exist..."%p)
                 p = self.__services[p]
                 self.__add_service(s, config[s], p)
 
