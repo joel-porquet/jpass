@@ -1,0 +1,51 @@
+# method: method for generating the password. can be everything that
+#   openssl can do (: indicates piping)
+# length: length of the password
+# pauth: authorized characters in the password
+#   - alnum (a-zA-Z0-9)
+#   - alpha (a-zA-Z)
+#   - lower (a-z)
+#   - upper (A-Z)
+#   - digit (0-9)
+#   - punct (/+)
+# preq: list of required characters in the password
+#   can specify the number of characters of a certain class
+#   can also specify what should be the position in the password
+#   [lower|upper|digit|punct]:number[:position1:position2:...], ...
+# iden: identifier for that service
+# parent: indicates another section from which the current section
+#   inherits (all sections inherit from DEFAULT first)
+# extra: extra token to add to the section name to generate the
+#   passphrase
+# comment: optional user string
+
+[DEFAULT]
+    method = sha256:base64
+    length = 8
+    pauth = alnum
+
+[kim2g]
+    iden = joel
+    extra = 1211
+
+[startssl]
+    extra = 0114
+    length = 10
+
+[labanquepostale.fr]
+    extra = 0414
+    length = 6
+    pauth = digit
+
+[communs1]
+    extra = 1211
+
+[monconsulat.fr]
+    parent = communs1
+    iden = 03083151
+
+[upmc.fr]
+    parent = communs1
+    iden = porquet
+    length = 9
+    preq = lower:1, upper:1, digit:1, punct:1:8
