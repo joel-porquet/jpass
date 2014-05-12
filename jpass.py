@@ -17,6 +17,7 @@ import traceback
 
 class PwdGenerator_sha256_base64:
 
+    # password generator based on sha256:base64
     def generate(input_str):
         pwd = getpass.getpass("Enter master password : ")
         s = pwd + " " + input_str
@@ -27,6 +28,7 @@ class PwdGenerator_sha256_base64:
 
 class PwdReq:
 
+    # requirement object
     def __init__(self, char, num, *pos):
         self.char = char
         self.num = int(num)
@@ -56,38 +58,44 @@ class PwdTransformer:
 
     char_dict_inv = { v:k for k,l in char_dict.items() for v in l }
 
-    def __build_char_auth(pauth):
-        l = []
-        for auth in pauth:
-            l += PwdTransformer.char_dict[auth]
-        return l
-
     def __transform_char(old_c, out_dict):
+        # get the length of old character's dict
         in_dict = PwdTransformer.char_dict_inv[old_c]
         in_len = len(PwdTransformer.char_dict[in_dict])
 
+        # get the lenght of new character's dict
         out_len = len(PwdTransformer.char_dict[out_dict])
 
+        # get the index of old character
         c_index = PwdTransformer.char_dict[in_dict].index(old_c)
+        # map this index in the new character's dict
         c_index = c_index % out_len
 
+        # perform the transform
         new_c = PwdTransformer.char_dict[out_dict][c_index]
 
         return new_c
 
     def __check_pauth(input_str, pauth):
-        char_auth = PwdTransformer.__build_char_auth(pauth)
+        # create a list of authorized characters
+        list_auth = []
+        for auth in pauth:
+            list_auth += PwdTransformer.char_dict[auth]
+
+        # only pass: ensure everything character of the generated password is
+        # compliant with the list of authorized characters
         s = list(input_str)
         for i in range(len(s)):
             c = s[i]
-            if not c in char_auth:
-                # transform the character into the first specidied dict
-                # in pauth
+            if not c in list_auth:
+                # if not authorized transform the character into the first
+                # dict specidied by pauth
                 c = PwdTransformer.__transform_char(c, pauth[0])
             s[i] = c
         return ''.join(s)
 
     def __check_preq(input_str, preq):
+        # create a list of requirements
         list_preq = []
         for p in preq:
             a = p.split(':')
@@ -148,19 +156,31 @@ class PwdTransformer:
         return input_str[:int(length)]
 
     def generate(input_str, length, pauth, preq):
-        digest, size = \
-                PwdGenerator_sha256_base64.generate(input_str)
+        digest, size = PwdGenerator_sha256_base64.generate(input_str)
+
+        if size < int(length):
+            raise ValueError("Size of generated password is not sufficient")
+
         digest = digest.decode('utf-8')
+
+        # clip to the right length
         digest = PwdTransformer.__clip(digest, length)
+        # solve pauth
         digest = PwdTransformer.__check_pauth(digest, pauth)
+        # solve preq
         if preq is not None:
             digest = PwdTransformer.__check_preq(digest, preq)
+
         return digest
 
 class PwdService:
 
-    pos_args = [ 'method', 'length', 'pauth', 'preq', 'iden', 'extra', 'comment', 'parent' ]
-    req_args = [ 'method', 'length', 'pauth' ]
+    possible_args = [ 'method', 'length', 'pauth', 'preq', 'iden', 'extra',
+            'comment', 'parent' ]
+    required_args = [ 'method', 'length', 'pauth' ]
+
+    possible_preq = [ 'lower', 'upper', 'digit', 'punct' ]
+    possible_pauth = possible_preq + [ 'alnum', 'alpha' ]
 
     def __init__(self, name, service, parent = None):
 
@@ -168,22 +188,27 @@ class PwdService:
         self.__parent = parent
         self.__args = {}
 
-        for a in PwdService.pos_args:
+        # we only recognize a certain list of arguments
+        for a in PwdService.possible_args:
             if a in service:
                 self.__args[a] = service.get(a, None)
 
+        # expand args into python lists
         self.__expand_arg('pauth')
         self.__expand_arg('preq')
 
+        # check that the service has the minimum required args
+        # and that pauth and preq are compliant
+        self.__check_service_req()
+        self.__check_service_pauth()
+        self.__check_service_preq()
+
+        # transform "alnum" and "alpha" into appropriate "lower", "upper" and
+        # "digit" root character classes
         self.__solve_pauth()
 
-        self.__check_service()
-
     def __solve_pauth(self):
-        try:
-            list_pauth = self.__args['pauth']
-        except:
-            return
+        list_pauth = self.__args['pauth']
         for i in range(len(list_pauth)):
             a = list_pauth[i]
             if a == 'alnum' or a == 'alpha':
@@ -194,6 +219,7 @@ class PwdService:
                     list_pauth.append('digit')
 
     def __expand_arg(self, arg):
+        # expand "char:num, char:num" string into a python list
         try:
             a = self.__args[arg]
         except:
@@ -201,10 +227,43 @@ class PwdService:
         a = a.split(',')
         self.__args[arg] = [v.strip() for v in a]
 
-    def __check_service(self):
-        for a in PwdService.req_args:
+    def __check_service_req(self):
+        # check the service has the required args
+        for a in PwdService.required_args:
             if self.get(a) is None:
                 raise ValueError("Service '%s'"%self.__name + " lacks a '%s' property"%a)
+
+    def __check_service_pauth(self):
+        # check pauth is compliant
+        for a in self.__args['pauth']:
+            if not a in PwdService.possible_pauth:
+                raise ValueError("Unknown pauth class: '%s'"%a)
+
+    def __check_service_preq(self):
+        # check preq is compliant
+        try:
+            p = self.__args['preq']
+        except:
+            return
+        length = int(self.__args['length'])
+        count = 0
+        for a in p:
+            r = a.split(':')
+            if len(r) < 2:
+                raise ValueError("preq field has less than two values")
+            if not r[0] in PwdService.possible_preq:
+                raise ValueError("Unknown preq class: '%s'"%a)
+            if not r[1].isdigit():
+                raise ValueError("Num field is wrong for: '%s'"%r[0])
+            if len(r) >= 3:
+                for i in range(2, len(r)):
+                    if not r[i].isdigit():
+                        raise ValueError("Pos field is wrong for: '%s'"%r[0])
+                    if int(r[i]) >= length:
+                        raise ValueError("Pos field is out of bound for: '%s'"%r[0])
+            count += int(r[1])
+        if count > length:
+            raise ValueError("Preq total num is superior to length")
 
     def __str__(self):
         r = "[%s]\n"%self.__name
@@ -214,6 +273,7 @@ class PwdService:
         return r
 
     def get(self, arg):
+        # get argument first from self, then from parent if any
         try:
             a = self.__args[arg]
         except:
@@ -223,41 +283,47 @@ class PwdService:
         return a
 
     def get_name(self):
+        # get name first from parent, then for self
         if self.__parent is not None:
             return self.__parent.__name
         return self.__name
 
     def print_pwd(self):
+        # build the service passphrase
         basename = self.get_name()
         extra = self.get('extra')
         service_str = basename + " " + extra
 
+        # get the constraints
         length = self.get('length')
         pauth = self.get('pauth')
         preq = self.get('preq')
 
-        iden = self.get('iden')
-
+        # generate the password
         pwd = PwdTransformer.generate(service_str,
                 length, pauth, preq)
 
-        print("")
+        # print everything about this service
+        print("---")
         print("Service      : %s"%self.__name)
         print("Passphrase   : %s"%service_str)
-        if iden is not None:
-            print("Identifier   : %s"%iden)
+        if self.get('iden') is not None:
+            print("Identifier   : %s"%self.get('iden'))
         print("Password     : %s"%pwd)
 
 class PwdCollection:
+
     def __init__(self, config):
         self.__services = {}
 
         # first add root sections
+        # i.e. sections that do not have a parent node
         for s in config.sections():
             if not 'parent' in config[s]:
                 self.__add_service(s, config[s])
 
         # then add child sections
+        # i.e. sections that have a parent node
         for s in config.sections():
             if 'parent' in config[s]:
                 p = config[s]['parent']
@@ -295,8 +361,19 @@ class PwdCollection:
         service.print_pwd()
 
 def main():
-    # test configuration file
-    conf_file = os.path.expanduser("~/.jpass.conf")
+
+    # determine configuration file
+    if len(sys.argv) == 1:
+        # no argument, then default file
+        conf_file = os.path.expanduser("~/.jpass.conf")
+    elif len(sys.argv) == 2:
+        # one argument, then take it
+        conf_file = os.path.abspath(str(sys.argv[1]))
+    else:
+        # more than one argument, impossible!
+        raise ValueError("Usage: %s configuration_file"%str(sys.argv[0]))
+        return 0
+
     if not os.path.exists(conf_file):
         raise ValueError("Configuration file not found: '%s'"%conf_file)
         return 0
@@ -306,7 +383,7 @@ def main():
     try:
         config.read(conf_file)
     except configparser.Error as e:
-        print("Error: ", e)
+        print("Error reading configuration file: ", e)
         return 0
 
     # start building a password collection
@@ -314,21 +391,20 @@ def main():
     try:
         pwd_collection = PwdCollection(config)
     except Exception as e:
-        print("Error: ", e)
+        print("Error building password collection: ", e)
         return 0
 
-    # get the service wanted by the user
+    # get the service name wanted by the user
     readline.parse_and_bind("tab: complete")
     readline.set_completer_delims('')
     readline.set_completer(pwd_collection.complete_service)
     service_name = input("Enter service name    : ")
 
-    # print the corresponding information
+    # generate the password and display the corresponding information
     try:
         pwd_collection.print_pwd(service_name)
     except Exception as e:
-        print(traceback.format_exc())
-        print("Error: ", e)
+        print("Error generating password: ", e)
         return 0
 
     return 1
