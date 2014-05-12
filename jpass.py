@@ -1,4 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
+"""
+JPass password manager
+"""
 
 import base64
 import configparser
@@ -331,3 +335,12 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+
+__author__ = "Joel Porquet"
+__copyright__ = "Copyright 2014, Joel Porquet"
+__credits__ = "Joel Porquet, Julien Peeters"
+__licence__ = "GPL"
+__version__ = "3"
+__maintainer__ = "Joel Porquet"
+__email__ = "joel@porquet.org"
+__status__ = "Prototype"
