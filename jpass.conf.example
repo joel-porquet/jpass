@@ -1,5 +1,5 @@
-# method: method for generating the password. can be everything that
-#   openssl can do (: indicates piping)
+# method: method for generating the password. should be everything that
+#   hashlib can do (':' indicates piping)
 # length: length of the password
 # pauth: authorized characters in the password
 #   - alnum (a-zA-Z0-9)
@@ -24,28 +24,29 @@
     length = 8
     pauth = alnum
 
-[kim2g]
-    iden = joel
+[google.com]
+    iden = yourname
     extra = 1211
 
 [startssl]
     extra = 0114
     length = 10
+    comment = my ssl free certificate
 
-[labanquepostale.fr]
+[mybank.com]
     extra = 0414
     length = 6
     pauth = digit
 
-[communs1]
+[common1]
     extra = 1211
 
-[monconsulat.fr]
-    parent = communs1
-    iden = 03083151
+[amazon.com]
+    parent = common1
+    iden = myemail
 
-[upmc.fr]
-    parent = communs1
-    iden = porquet
+[shittywebsite.com]
+    parent = common1
+    iden = myemail
     length = 9
     preq = lower:1, upper:1, digit:1, punct:1:8
