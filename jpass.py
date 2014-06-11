@@ -11,6 +11,7 @@ import getpass
 import hashlib
 import os
 import readline
+import rlcompleter
 import string
 import sys
 import traceback
@@ -394,7 +395,11 @@ def main():
         return 0
 
     # get the service name wanted by the user
-    readline.parse_and_bind("tab: complete")
+    if 'libedit' in readline.__doc__:
+        readline.parse_and_bind("bind ^I rl_complete")
+    else:
+        readline.parse_and_bind("tab: complete")
+
     readline.set_completer_delims('')
     readline.set_completer(pwd_collection.complete_service)
     service_name = input("Enter service name    : ")
