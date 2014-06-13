@@ -123,15 +123,15 @@ class PwdTransformer:
 
         # third pass: remove required chars from occurences
         for r in list_preq:
-            if r.pos:
-                for p in r.pos:
-                    # remove the item at the specified position
-                    occurences[r.char].remove(p)
-                    r.num -= 1
-            elif occurences[r.char]:
-                #remove the last item if possible
-                occurences[r.char].pop()
+            for p in r.pos:
+                # remove the item at the specified position
+                occurences[r.char].remove(p)
                 r.num -= 1
+            if r.num > 0 and occurences[r.char]:
+                while(r.num > 0 and len(occurences[r.char]) > 0):
+                    #remove the last item if possible
+                    occurences[r.char].pop()
+                    r.num -= 1
 
         # compute the list of changeable indexes
         chg_indexes = []
@@ -142,7 +142,7 @@ class PwdTransformer:
         # fourth pass: satisfy the requirements (in order of their
         # appearance )
         for r in list_preq:
-            if r.num > len(occurences[r.char]):
+            while (r.num > len(occurences[r.char])):
                 # req is not satisfied
                 # get and remove available index
                 i = chg_indexes.pop(0)
@@ -150,6 +150,8 @@ class PwdTransformer:
                 c = s[i]
                 c = PwdTransformer.__transform_char(c, r.char)
                 s[i] = c
+                # one requirement less
+                r.num -= 1
 
         return ''.join(s)
 
