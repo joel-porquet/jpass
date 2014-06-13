@@ -41,8 +41,8 @@ class PwdReq:
     def __str__(self):
         r = "char:'%s', "%self.char
         r += "num:'%d'"%self.num
-        if self.pos is not None:
-            r += ", pos:'%d'"%self.pos
+        for p in self.pos:
+            r += ", pos:'%d'"%p
         return r
 
 class PwdTransformer:
