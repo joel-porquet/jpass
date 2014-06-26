@@ -19,9 +19,8 @@ import traceback
 class PwdGenerator_sha256_base64:
 
     # password generator based on sha256:base64
-    def generate(input_str):
-        pwd = getpass.getpass("Enter master password : ")
-        s = pwd + " " + input_str
+    def generate(input_str, pwd_str):
+        s = pwd_str + " " + input_str
         res_sha = hashlib.sha256()
         res_sha.update(s.encode('utf-8'))
         return (base64.standard_b64encode(res_sha.digest()),
@@ -158,8 +157,8 @@ class PwdTransformer:
     def __clip(input_str, length):
         return input_str[:int(length)]
 
-    def generate(input_str, length, pauth, preq):
-        digest, size = PwdGenerator_sha256_base64.generate(input_str)
+    def generate(input_str, pwd_str, length, pauth, preq):
+        digest, size = PwdGenerator_sha256_base64.generate(input_str, pwd_str)
 
         if size < int(length):
             raise ValueError("Size of generated password is not sufficient")
@@ -291,7 +290,7 @@ class PwdService:
             return self.__parent.__name
         return self.__name
 
-    def print_pwd(self):
+    def print_pwd(self, pwd):
         # build the service passphrase
         basename = self.get_name()
         extra = self.get('extra')
@@ -302,17 +301,23 @@ class PwdService:
         pauth = self.get('pauth')
         preq = self.get('preq')
 
-        # generate the password
-        pwd = PwdTransformer.generate(service_str,
-                length, pauth, preq)
+        if pwd:
+            # generate the password
+            pwd = PwdTransformer.generate(service_str, pwd,
+                    length, pauth, preq)
 
         # print everything about this service
+        if pwd is None:
+            print("")
+
         print("---")
         print("Service      : %s"%self.__name)
         print("Passphrase   : %s"%service_str)
         if self.get('iden') is not None:
             print("Identifier   : %s"%self.get('iden'))
-        print("Password     : %s"%pwd)
+
+        if pwd:
+            print("Password     : %s"%pwd)
 
 class PwdCollection:
 
@@ -358,9 +363,9 @@ class PwdCollection:
                 else:
                     state -= 1
 
-    def print_pwd(self, name):
+    def print_pwd(self, name, pwd):
         service = self.__get_service(name)
-        service.print_pwd()
+        service.print_pwd(pwd)
 
 def main():
 
@@ -408,10 +413,13 @@ def main():
 
     # generate the password and display the corresponding information
     try:
-        pwd_collection.print_pwd(service_name)
+        pwd_str = getpass.getpass("Enter master password : ")
+    except EOFError:
+        pwd_str = None
     except Exception as e:
         print("Error generating password: ", e)
         return 0
+    pwd_collection.print_pwd(service_name, pwd_str)
 
     return 1
 
