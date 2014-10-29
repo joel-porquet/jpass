@@ -8,7 +8,8 @@ setup(
         author = "Joël Porquet",
         author_email = "joel@porquet.org",
         license = "GPL3",
-        install_requires = ["ConfigObj"],
+        requires = ["ConfigObj"],
         packages = ["jpass"],
         scripts = ["bin/jpass"],
+        data_files = ("jpass", ["docs/*"]),
         )
