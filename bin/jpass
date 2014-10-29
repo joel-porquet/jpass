@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+# This script is mainly a wrapper script for the jpass package
+# Copyright 2014, Joel Porquet
+
+import sys
+
+def error(*objs):
+    print(*objs, file=sys.stderr)
+
+try:
+    import jpass
+except ImportError as e:
+    error(e)
+    error("To run an uninstalled copy of jpass, "
+            "please launch jpass/jpass.py directly")
+    sys.exit(1)
+
+try:
+    jpass.cli.main()
+except Exception as e:
+    error("An error occurred: %s" % e)
+    sys.exit(1)

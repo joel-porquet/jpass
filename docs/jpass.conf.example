@@ -1,0 +1,28 @@
+method = sha256:base64
+length = 8
+pauth = alnum
+
+[google.com]
+    id = yourname
+    extra = 1211
+
+[startssl]
+    extra = 0114
+    length = 10
+    comment = my ssl free certificate
+
+[mybank.com]
+    extra = 0414
+    length = 6
+    pauth = digit
+
+[common1]
+    extra = 1211
+
+    [[amazon.com]]
+        id = myemail
+
+    [[shittywebsite.com]]
+        id = myemail
+        length = 9
+        preq = lower:1, upper:1, digit:1, punct:1:8
