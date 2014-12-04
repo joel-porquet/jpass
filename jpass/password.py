@@ -24,24 +24,21 @@ class PasswordGenerator:
         if method in PasswordGenerator.generators:
             return PasswordGenerator.generators[method].generate(input_str)
         else:
-            raise ValueError("Cannot find password generation method '%s'"
-                    % (method))
+            raise ValueError("Cannot find password generation method '{}'"
+                    .format(method))
 
 class PasswordReq:
 
-    def __init__(self, char, num, *pos):
-        self.char = char
+    def __init__(self, char_dict, num, *pos):
+        self.char_dict = char_dict
         self.num = int(num)
-        self.pos = []
-
-        for p in pos:
-            self.pos.append(int(p))
+        self.pos = [int(p) for p in pos]
 
     def __str__(self):
-        r = "char:'%s', "%self.char
-        r += "num:'%d'"%self.num
+        r = "char_dict:'{}', ".format(self.char_dict)
+        r += "num:'{}'".format(self.num)
         for p in self.pos:
-            r += ", pos:'%d'"%p
+            r += ", pos:'{}'".format(p)
         return r
 
 class PasswordTransformer:
@@ -58,7 +55,7 @@ class PasswordTransformer:
             'punct' : char_punct
             }
 
-    char_dict_inv = { v:k for k,l in char_dict.items() for v in l }
+    char_dict_inv = {v: k for k, l in char_dict.items() for v in l}
 
     @staticmethod
     def __transform_char(old_c, out_dict):
@@ -97,7 +94,7 @@ class PasswordTransformer:
         s = list(input_str)
         for i in range(len(s)):
             c = s[i]
-            if not c in list_auth:
+            if c not in list_auth:
                 # if not authorized transform the character into the first
                 # dict specidied by pauth
                 c = PasswordTransformer.__transform_char(c, pauth[0])
@@ -120,7 +117,7 @@ class PasswordTransformer:
         for r in list_preq:
             for p in r.pos:
                 c = s[p]
-                c = PasswordTransformer.__transform_char(c, r.char)
+                c = PasswordTransformer.__transform_char(c, r.char_dict)
                 s[p] = c
 
         # second pass: count the occurence of each char class
@@ -138,12 +135,12 @@ class PasswordTransformer:
         for r in list_preq:
             for p in r.pos:
                 # remove the item at the specified position
-                occurences[r.char].remove(p)
+                occurences[r.char_dict].remove(p)
                 r.num -= 1
-            if r.num > 0 and occurences[r.char]:
-                while(r.num > 0 and len(occurences[r.char]) > 0):
+            if r.num > 0 and occurences[r.char_dict]:
+                while(r.num > 0 and len(occurences[r.char_dict]) > 0):
                     #remove the last item if possible
-                    occurences[r.char].pop()
+                    occurences[r.char_dict].pop()
                     r.num -= 1
 
         # compute the list of changeable indexes
@@ -152,16 +149,15 @@ class PasswordTransformer:
             chg_indexes += v
         chg_indexes.sort()
 
-        # fourth pass: satisfy the requirements (in order of their
-        # appearance )
+        # fourth pass: satisfy the requirements (in order of their appearance)
         for r in list_preq:
-            while (r.num > len(occurences[r.char])):
+            while (r.num > len(occurences[r.char_dict])):
                 # req is not satisfied
                 # get and remove available index
                 i = chg_indexes.pop(0)
                 # transform the character
                 c = s[i]
-                c = PasswordTransformer.__transform_char(c, r.char)
+                c = PasswordTransformer.__transform_char(c, r.char_dict)
                 s[i] = c
                 # one requirement less
                 r.num -= 1
@@ -179,8 +175,8 @@ class PasswordTransformer:
 
         # now start working on the raw password
         if size < int(length):
-            raise ValueError("Size of generated password is not sufficient: < %s"
-                    % (length))
+            raise ValueError("Size of generated password is not sufficient: < {}"
+                    .format(length))
 
         digest = digest.decode('utf-8')
 

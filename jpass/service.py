@@ -16,18 +16,18 @@ class Attribute:
         """
         for a in Attribute.req_attrs:
             if not service.get_attr(a):
-                raise ValueError("Service '%s': lacks a '%s' property" %
-                        (service.name, a))
+                raise ValueError("Service '{}': lacks a '{}' property"
+                        .format(service.name, a))
 
     @staticmethod
     def __check_pauth_attr(service):
         """ check the pauth attribute is compliant
         """
         for p in service.get_attr("pauth"):
-            if not p in Attribute.pauth:
-                raise ValueError("Service '%s': "
-                        "unknown class in 'pauth' field: '%s'"
-                        % (service.name, p))
+            if p not in Attribute.pauth:
+                raise ValueError("Service '{}': "
+                        "unknown class in 'pauth' field: '{}'"
+                        .format(service.name, p))
 
     @staticmethod
     def __check_preq_attr(service):
@@ -41,32 +41,32 @@ class Attribute:
         for a in p:
             r = a.split(':')
             if len(r) < 2:
-                raise ValueError("Service '%s': "
-                        "less than two values in 'preq' field: '%s'"
-                        % (service.name, a))
-            if not r[0] in Attribute.preq:
-                raise ValueError("Service '%s': "
-                        "unknown class in 'preq' field: '%s'"
-                        % (service.name, a))
+                raise ValueError("Service '{}': "
+                        "less than two values in 'preq' field: '{}'"
+                        .format(service.name, a))
+            if r[0] not in Attribute.preq:
+                raise ValueError("Service '{}': "
+                        "unknown class in 'preq' field: '{}'"
+                        .format(service.name, a))
             if not r[1].isdigit():
-                raise ValueError("Service '%s': "
-                        "wrong format for 'num' subfield in 'preq' field: '%s'"
-                        % (service.name, a))
+                raise ValueError("Service '{}': "
+                        "wrong format for 'num' subfield in 'preq' field: '{}'"
+                        .format(service.name, a))
             if len(r) >= 3:
                 for i in range(2, len(r)):
                     if not r[i].isdigit():
-                        raise ValueError("Service '%s': "
-                                "wrong format for 'pos' subfield in 'preq' field: '%s'"
-                                % (service.name, a))
+                        raise ValueError("Service '{}': "
+                                "wrong format for 'pos' subfield in 'preq' field: '{}'"
+                                .format(service.name, a))
                     if int(r[i]) >= length:
-                        raise ValueError("Service '%s': "
-                                "out of bound 'pos' subfield in 'preq' field: '%s'"
-                                % (service.name, a))
+                        raise ValueError("Service '{}': "
+                                "out of bound 'pos' subfield in 'preq' field: '{}'"
+                                .format(service.name, a))
             count += int(r[1])
         if count > length:
-            raise ValueError("Service '%s': "
-                    "total number of 'preq' is superior to length: %s"
-                    % (service.name, p))
+            raise ValueError("Service '{}': "
+                    "total number of 'preq' is superior to length: {}"
+                    .format(service.name, p))
 
     @staticmethod
     def __solve_pauth_attr(service):
@@ -112,8 +112,7 @@ class Service:
 
     def __init__(self, name, conf):
         if not conf.is_section(name):
-            raise ValueError("Service '%s': unknown service"
-                    % (name))
+            raise ValueError("Service '{}': unknown service" .format(name))
 
         self.conf = conf
         self.name = name
@@ -130,24 +129,24 @@ class Service:
         self.__attrs[key] = value
 
     def __str__(self):
-        r = "[%s]\n" % self.name
-        r = "\tbasename: %s\n" % self.basename
+        r = "[{}]\n".format(self.name)
+        r = "\tbasename: {}\n".format(self.basename)
         for k, v in self.__attrs.items():
             if not v:
                 continue
-            r += "\t%s\t: %s\n" % (k, v)
+            r += "\t{}\t: {}\n".format(k, v)
         return r
 
     def pretty_print(self, pwd):
 
         print("---")
-        print("Service\t\t: %s" % self.name)
+        print("Service\t\t: {}".format(self.name))
         if self.basename != self.name:
-            print("Passphrase\t: %s" % self.basename)
-        if self.get_attr("id") is not None:
-            print("Identifier\t: %s" % self.get_attr("id"))
+            print("Passphrase\t: {}".format(self.basename))
+        if self.get_attr("id"):
+            print("Identifier\t: {}".format(self.get_attr("id")))
         if pwd:
-            print("Password\t: %s" % pwd)
+            print("Password\t: {}".format(pwd))
 
     def generate_password(self, master_pwd):
         if not master_pwd:

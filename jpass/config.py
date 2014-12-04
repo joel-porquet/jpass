@@ -22,7 +22,7 @@ class Config:
 
     def __parse_conf(self):
         if self.verbose:
-            print("Using configuration file '%s'" % self.conf_file)
+            print("Using configuration file '{s}'".format(self.conf_file))
 
         self.__config = configobj.ConfigObj(self.conf_file, file_error=True)
 
@@ -36,13 +36,13 @@ class Config:
         self.__add_section_dict(self.__config)
 
     def is_section(self, section):
-        for k in self.linear_dict.keys():
+        for k in self.linear_dict:
             if k == section:
                 return True
         return False
 
     def complete_section(self, text, state):
-        for k in self.linear_dict.keys():
+        for k in self.linear_dict:
             if k.startswith(text):
                 if not state:
                     return k
@@ -52,7 +52,7 @@ class Config:
     def __get_section_attr(self, section, attr):
         if attr in section.scalars:
             return section.get(attr)
-        elif section.parent != section:
+        elif section.parent is not section:
             return self.__get_section_attr(section.parent, attr)
         else:
             return None
@@ -73,7 +73,7 @@ class Config:
         s = self.linear_dict[section_name]
         basename = self.__get_section_basename(s)
         if not basename:
-            raise ValueError("Service '%s': cannot find basename!?"
-                    % (section_name))
+            raise ValueError("Service '{}': cannot find basename!?"
+                    .format(section_name))
         return basename
 
