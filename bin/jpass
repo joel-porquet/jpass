@@ -12,7 +12,8 @@ try:
 except ImportError as e:
     error(e)
     error("To run an uninstalled copy of jpass, "
-            "please launch jpass/jpass.py directly")
+            "please setup PYTHONPATH properly.")
+    error("E.g. PYTHONPATH=$PWD bin/jpass")
     sys.exit(1)
 
 try:

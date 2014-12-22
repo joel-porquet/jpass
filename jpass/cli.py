@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright 2014, Joel Porquet
 
 import argparse
@@ -67,7 +66,3 @@ def main():
 
     serv.pretty_print(pwd)
 
-if __name__ == "__main__":
-    # direct entry point
-    # mainly for uninstalled copy of the program
-    main()
