@@ -4,8 +4,8 @@
 import argparse
 import sys
 
-from jpass.config import Config
-from jpass.service import Service
+from .config import Config
+from .service import Service
 
 def get_service(conf):
     if conf.service:

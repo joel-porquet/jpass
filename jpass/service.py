@@ -1,6 +1,6 @@
 # Copyright 2014, Joel Porquet
 
-from jpass.password import PasswordTransformer
+from .password import PasswordTransformer
 
 class Attribute:
 
