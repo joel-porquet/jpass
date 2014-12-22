@@ -60,8 +60,10 @@ def main():
     service_name = get_service(conf)
     serv = Service(service_name, conf)
 
-    master_pwd = get_master_password(conf)
-    pwd = serv.generate_password(master_pwd)
+    pwd = None
+    if not conf.information:
+        master_pwd = get_master_password(conf)
+        pwd = serv.generate_password(master_pwd)
 
     serv.pretty_print(pwd)
 

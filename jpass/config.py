@@ -13,6 +13,7 @@ class Config:
             information = None):
         self.verbose = verbosity
         self.service = service
+        self.information = information
 
         if conf:
             self.conf_file = conf
