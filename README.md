@@ -1,8 +1,5 @@
 # JPass password manager
 
-For more information about why this software, you can read this
-[article](https://joel.porquet.org/wiki/hacking/password_management_history/)
-
 ![Jpass demo](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/plain/docs/demo.gif)
 
 ## Usage
