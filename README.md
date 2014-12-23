@@ -1,10 +1,31 @@
 # JPass password manager
 
+**Jpass** is a flexible and configurable password manager and generator.
+
+From a configuration file describing services (i.e. usually websites for which
+you have to authenticate), **jpass** is able to generate deterministic
+passwords based on a master password.
+
+So at the end of the day, all you have to know and protect is your master
+password, and **jpass** takes care of the rest.
+
+Features:
+
+* Password generation based on standard libraries (e.g. sha256 and base64)
+* Fully configurable password generation: you can specify the length, the sets
+  of authorized characters, the sets of required characters, etc.
+* Principle of inheritance: very sensitive services can have their own unique
+  password, while less sensitive services can be grouped and share the same
+  password.
+
+It is somewhat similar to LastPass but with a taste of amateurish free
+software.
+
 ![Jpass demo](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/plain/docs/demo.gif)
 
 ## Usage
 
-`jpass` is to be used in a terminal. Without any arguments, it will read the
+**jpass** is to be used in a terminal. Without any arguments, it will read the
 default configuration file, located in `~/.jpass.conf`. Otherwise you can
 specify the path of the configuration file as argument: `jpass -c
 [configuration_file]`
@@ -22,8 +43,9 @@ specify the path of the configuration file as argument: `jpass -c
       -i, --information     only display information about a service
 
 
-Note: if you want to use `jpass` without installing it, then you have to modify
-your `PYTHONPATH` when lauching the application (in the source directory):
+Note: if you want to use **jpass** without installing it, then you have to
+modify your `PYTHONPATH` when lauching the application (in the source
+directory):
 
     $ PYTHONPATH=$PWD:$PYTHONPATH bin/jpass
 
