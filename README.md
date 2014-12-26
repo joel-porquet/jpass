@@ -1,15 +1,17 @@
 # JPass password manager
 
+## What it jpass?
+
 **Jpass** is a flexible and configurable password manager and generator.
 
 From a configuration file describing services (i.e. usually websites for which
 you have to authenticate), **jpass** is able to generate deterministic
-passwords based on a master password.
+passwords based on a single master password.
 
-So at the end of the day, all you have to know and protect is your master
-password, and **jpass** takes care of the rest.
+So at the end of the day, all you have to remember and protect is your *master
+password*, and **jpass** takes care of the rest.
 
-Features:
+## Features
 
 * Password generation based on standard libraries (e.g. sha256 and base64)
 * Fully configurable password generation: you can specify the length, the sets
@@ -20,6 +22,9 @@ Features:
 
 It is somewhat similar to LastPass but with a taste of amateurish free
 software.
+
+There is also a web-frontend for **jpass** called
+[jpass-web](https://joel.porquet.org/cgit/cgit.cgi/jpass-web.git/about/).
 
 ![Jpass demo](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/plain/docs/demo.gif)
 
@@ -65,7 +70,7 @@ service. An example is as follow:
         id = yourname
         extra = 1211
 
-    [startssl]
+    [startssl.com]
         extra = 0114
         length = 10
         comment = my ssl free certificate
