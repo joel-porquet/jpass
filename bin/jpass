@@ -19,5 +19,5 @@ except ImportError as e:
 try:
     jpass.cli.main()
 except Exception as e:
-    error("An error occurred: %s" % e)
+    error("An error occurred: {s}".format(e))
     sys.exit(1)
