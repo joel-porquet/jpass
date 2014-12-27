@@ -1,8 +1,8 @@
-# JPass password manager
+# jpass password manager
 
 ## What it jpass?
 
-**Jpass** is a flexible and configurable password manager and generator.
+**jpass** is a flexible and configurable password manager and generator.
 
 From a configuration file describing services (i.e. usually websites for which
 you have to authenticate), **jpass** is able to generate deterministic
@@ -26,7 +26,7 @@ software.
 There is also a web-frontend for **jpass** called
 [jpass-web](https://joel.porquet.org/cgit/cgit.cgi/jpass-web.git/about/).
 
-![Jpass demo](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/plain/docs/demo.gif)
+![jpass demo](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/plain/docs/demo.gif)
 
 ## Usage
 
@@ -99,8 +99,8 @@ parameters can be overridden in each section. At least `method`, `length` and
 Here is the list of possible parameters with explanations:
 
 * **method**: method for generating the password. Should be everything that the
-  `hashlib` python module can do (':' indicates piping). *So far, jpass only
-  supports sha256:base64 method.*
+  `hashlib` python module can do (':' indicates piping). *So far, **jpass**
+  only supports sha256:base64 method.*
 * **length**: length of the password.
 * **pauth**: set of authorized characters in the password.
  * *alnum* ('a-zA-Z0-9')
