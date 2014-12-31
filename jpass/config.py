@@ -23,7 +23,7 @@ class Config:
 
     def __parse_conf(self):
         if self.verbose:
-            print("Using configuration file '{s}'".format(self.conf_file))
+            print("Using configuration file '{!s}'".format(self.conf_file))
 
         self.__config = configobj.ConfigObj(self.conf_file, file_error=True)
 

@@ -40,7 +40,7 @@ def get_args():
                 help="increase verbosity level")
 
         parser.add_argument("-c", "--conf",
-                help="specify a configuration file (default is '{s}')"
+                help="specify a configuration file (default is '{!s}')"
                 .format(Config.conf_file))
 
         parser.add_argument("-s", "--service", help="specify a service name")
