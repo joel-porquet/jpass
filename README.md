@@ -28,6 +28,13 @@ There is also a web-frontend for **jpass** called
 
 ![jpass demo](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/plain/docs/demo.gif)
 
+## Installation
+
+    $ python setup.py install
+
+Or there is also a [package](https://aur.archlinux.org/packages/jpass-git) for
+ArchLinux.
+
 ## Usage
 
 **jpass** is to be used in a terminal. Without any arguments, it will read the
