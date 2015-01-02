@@ -30,7 +30,7 @@ There is also a web-frontend for **jpass** called
 
 ## Installation
 
-    $ python setup.py install
+    # python setup.py install
 
 Or there is also a [package](https://aur.archlinux.org/packages/jpass-git) for
 ArchLinux.
