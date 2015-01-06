@@ -131,5 +131,6 @@ both inherit from section `common1`.
 # Mirrors
 
 This project is mirrored on:
+
 * [github](https://github.com/joel-porquet/jpass)
-* [my cgit](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/about/).
+* [my cgit](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/about/)
