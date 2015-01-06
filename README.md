@@ -24,9 +24,9 @@ It is somewhat similar to LastPass but with a taste of amateurish free
 software.
 
 There is also a web-frontend for **jpass** called
-[jpass-web](https://joel.porquet.org/cgit/cgit.cgi/jpass-web.git/about/).
+[jpass-web](https://github.com/joel-porquet/jpass-web).
 
-![jpass demo](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/plain/docs/demo.gif)
+![jpass demo](docs/demo.gif)
 
 ## Installation
 
