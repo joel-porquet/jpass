@@ -128,3 +128,8 @@ A section can inherit from another one, by specifying more square brackets. For
 example, in the example above, sections `amazon.com` and `shittywebsite.com`
 both inherit from section `common1`.
 
+# Mirrors
+
+This project is mirrored on:
+* [github](https://github.com/joel-porquet/jpass)
+* [my cgit](https://joel.porquet.org/cgit/cgit.cgi/jpass.git/about/).
