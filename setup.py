@@ -11,5 +11,5 @@ setup(
         requires = ["ConfigObj"],
         packages = ["jpass"],
         scripts = ["bin/jpass"],
-        data_files = [("share/doc/jpass", ["doc/jpass.conf.example"])],
+        data_files = [("share/doc/jpass", ["docs/jpass.conf.example"])],
         )
