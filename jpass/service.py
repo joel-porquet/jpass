@@ -147,6 +147,7 @@ class Service:
             print("Identifier\t: {}".format(self.get_attr("id")))
         if pwd:
             print("Password\t: {}".format(pwd))
+        print("---")
 
     def generate_password(self, master_pwd):
         if not master_pwd:
