@@ -1,0 +1,18 @@
+#compdef jpass
+#autoload
+
+_jpass_arglist=(
+    '(-h --help)'{-h,--help}'[Show help and exit]'
+    '(-c --conf)'{-c,--conf}'[Specify a configuration file]:conf:_files'
+    '(-x --xclip)'{-x,--xclip}'[Copy password to clipboard]'
+    '(-i --information)'{-i,--information}'[Only display information about a service]'
+    '(-v --verbosity)'{-v,--verbosity}'[Increase verbosity level]'
+    ':service name:_jpass_complete_entries -/'
+)
+
+_jpass_complete_entries () {
+    local IFS=$'\n'
+    _values 'services' ${$(cat ~/.jpass.conf | grep -ve "^[[:space:]]*#" | grep -e "^[[:space:]]*\[\+" | sed 's/.*\[\+\([^]]*\)\]\+.*/\1\n/g' | sort):--""}
+}
+
+_arguments -s $_jpass_arglist
