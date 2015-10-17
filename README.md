@@ -26,8 +26,6 @@ software.
 There is also a web-frontend for **jpass** called
 [jpass-web](https://github.com/joel-porquet/jpass-web).
 
-![jpass demo](docs/demo.gif)
-
 ## Installation
 
     # python setup.py install
@@ -43,17 +41,18 @@ specify the path of the configuration file as argument: `jpass -c
 [configuration_file]`
 
     $ jpass -h
-    usage: jpass [-h] [-v] [-c CONF] [-s SERVICE] [-i]
+    usage: jpass [-h] [-c CONF] [-x] [-i] [-v] [service]
+
+    positional arguments:
+      service               specify a service name
 
     optional arguments:
       -h, --help            show this help message and exit
-      -v, --verbosity       increase verbosity level
       -c CONF, --conf CONF  specify a configuration file (default is
-                            '~/.jpass.conf')
-      -s SERVICE, --service SERVICE
-                            specify a service name
+                            '/home/joel/.jpass.conf')
+      -x, --xclip           copy password to clipboard
       -i, --information     only display information about a service
-
+      -v, --verbosity       increase verbosity level
 
 Note: if you want to use **jpass** without installing it, then you have to
 modify your `PYTHONPATH` when lauching the application (in the source
