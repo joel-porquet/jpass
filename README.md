@@ -1,5 +1,10 @@
 # jpass password manager
 
+## Unmaintained project
+
+**I no longer use or develop this project, as I have switched to Bitwarden to
+handle all my passwords.**
+
 ## What it jpass?
 
 **jpass** is a flexible and configurable password manager and generator.
